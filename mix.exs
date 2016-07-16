@@ -18,7 +18,7 @@ defmodule RockstarDev.Mixfile do
   # Type `mix help compile.app` for more information.
   def application do
     [mod: {RockstarDev, []},
-     applications: [:phoenix, :phoenix_pubsub, :phoenix_html, :cowboy, :logger, :gettext, :httpoison,
+     applications: [:phoenix, :phoenix_pubsub, :phoenix_html, :cowboy, :logger, :gettext, :httpoison, :quantum, 
                     :phoenix_ecto, :postgrex]]
   end
 
@@ -39,6 +39,8 @@ defmodule RockstarDev.Mixfile do
      {:phoenix_live_reload, "~> 1.0", only: :dev},
      {:gettext, "~> 0.11"},
      {:httpoison, "~> 0.9.0"},
+     {:poison, "~> 2.2"},
+     {:quantum, ">= 1.7.1"},
      {:cowboy, "~> 1.0"}]
   end
 
