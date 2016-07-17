@@ -1,0 +1,36 @@
+<h2>Listing github accounts</h2>
+
+<table class="table">
+  <thead>
+    <tr>
+      <th>Account</th>
+      <th>Username</th>
+      <th>Email</th>
+      <th>Html url</th>
+      <th>Score</th>
+      <th>No repo</th>
+
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+<%= for git_hub_account <- @github_accounts do %>
+    <tr>
+      <td><%= git_hub_account.account_id %></td>
+      <td><%= git_hub_account.username %></td>
+      <td><%= git_hub_account.email %></td>
+      <td><%= git_hub_account.html_url %></td>
+      <td><%= git_hub_account.score %></td>
+      <td><%= git_hub_account.no_repo %></td>
+
+      <td class="text-right">
+        <%= link "Show", to: git_hub_account_path(@conn, :show, git_hub_account), class: "btn btn-default btn-xs" %>
+        <%= link "Edit", to: git_hub_account_path(@conn, :edit, git_hub_account), class: "btn btn-default btn-xs" %>
+        <%= link "Delete", to: git_hub_account_path(@conn, :delete, git_hub_account), method: :delete, data: [confirm: "Are you sure?"], class: "btn btn-danger btn-xs" %>
+      </td>
+    </tr>
+<% end %>
+  </tbody>
+</table>
+
+<%= link "New git hub account", to: git_hub_account_path(@conn, :new) %>

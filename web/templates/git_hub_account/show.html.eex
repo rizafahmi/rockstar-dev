@@ -1,0 +1,38 @@
+<h2>Show git hub account</h2>
+
+<ul>
+
+  <li>
+    <strong>Account:</strong>
+    <%= @git_hub_account.account_id %>
+  </li>
+
+  <li>
+    <strong>Username:</strong>
+    <%= @git_hub_account.username %>
+  </li>
+
+  <li>
+    <strong>Email:</strong>
+    <%= @git_hub_account.email %>
+  </li>
+
+  <li>
+    <strong>Html url:</strong>
+    <%= @git_hub_account.html_url %>
+  </li>
+
+  <li>
+    <strong>Score:</strong>
+    <%= @git_hub_account.score %>
+  </li>
+
+  <li>
+    <strong>No repo:</strong>
+    <%= @git_hub_account.no_repo %>
+  </li>
+
+</ul>
+
+<%= link "Edit", to: git_hub_account_path(@conn, :edit, @git_hub_account) %>
+<%= link "Back", to: git_hub_account_path(@conn, :index) %>
