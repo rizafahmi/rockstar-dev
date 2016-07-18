@@ -9,6 +9,8 @@ defmodule RockstarDev.GitHubAccount do
     field :html_url, :string
     field :score, :float
     field :no_repo, :integer
+    field :repo_created, :integer
+    field :repo_pushed, :integer
 
     timestamps()
   end
@@ -56,27 +58,40 @@ defmodule RockstarDev.GitHubAccount do
   defp put_repos(changeset) do
     case changeset do
       %Ecto.Changeset{valid?: true, changes: %{username: username}} ->
-        put_change(changeset, :no_repo, count_repos(username))
+        no_repo_created = count_repos(username, "CreateEvent")
+        if no_repo_created == nil do
+          no_repo_created = 0
+        end
+
+        no_repo_pushed = count_repos(username, "PushEvent")
+        if no_repo_pushed == nil do
+          no_repo_pushed = 0
+        end
+
+        total_repos = no_repo_created + no_repo_pushed
+        put_change(changeset, :no_repo, total_repos)
     end
 
   end
 
-  defp count_repos(username) do
-    url = "https://api.github.com/users/" <> username <> "/events/public"
+  defp count_repos(username, type) do
+    url = "https://api.github.com/users/" <> username <> "/events/public?per_page=100"
 
     {:ok, %HTTPoison.Response{status_code: 200, body: body}} = HTTPoison.get(url)
 
     data = JSON.decode!(body)
 
-    count_repos(data, 0)
+    count_repos(data, type, 0)
 
   end
 
-  defp count_repos([h|t], count) do
-    count_repos(t, count + 1)
+  defp count_repos([h|t], type, count) do
+    if Map.fetch!(h, "type") == type do
+      count_repos(t, type, count + 1)
+    end
   end
 
-  defp count_repos([], count) do
+  defp count_repos([], type, count) do
     count
   end
 end
