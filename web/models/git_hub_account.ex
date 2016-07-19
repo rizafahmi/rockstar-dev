@@ -23,7 +23,7 @@ defmodule RockstarDev.GitHubAccount do
     |> cast(params, [:account_id, :username, :html_url, :score])
     |> validate_required([:account_id, :username, :html_url, :score])
     |> put_email()
-    |> put_repos()
+    # |> put_repos()
   end
 
   defp put_email(changeset) do
@@ -34,13 +34,15 @@ defmodule RockstarDev.GitHubAccount do
   end
 
   defp get_email(username) do
-    url = "https://api.github.com/users/" <> username <> "/events/public"
+    url = "https://api.github.com/users/" <> username <> "/events/public?per_page=50"
 
-    {:ok, %HTTPoison.Response{status_code: 200, body: body}} = HTTPoison.get(url)
-
-    data = JSON.decode!(body)
-
-    get_email_from_repo(data)
+    case HTTPoison.get(url) do
+      {:ok, %HTTPoison.Response{status_code: 200, body: body}} ->
+        data = JSON.decode!(body)
+        get_email_from_repo(data)
+      _ ->
+        "no email found"
+    end
   end
 
   defp get_email_from_repo([h|t]) do
@@ -70,28 +72,32 @@ defmodule RockstarDev.GitHubAccount do
 
         total_repos = no_repo_created + no_repo_pushed
         put_change(changeset, :no_repo, total_repos)
+        put_change(changeset, :repo_created, no_repo_created)
+        put_change(changeset, :repo_pushed, no_repo_pushed)
     end
 
   end
 
-  defp count_repos(username, type) do
-    url = "https://api.github.com/users/" <> username <> "/events/public?per_page=100"
+  def count_repos(username, type) do
+    url = "https://api.github.com/users/" <> username <> "/events/public?per_page=50"
 
-    {:ok, %HTTPoison.Response{status_code: 200, body: body}} = HTTPoison.get(url)
-
-    data = JSON.decode!(body)
-
-    count_repos(data, type, 0)
+    case HTTPoison.get(url) do
+      {:ok, %HTTPoison.Response{status_code: 200, body: body}} ->
+        data = JSON.decode!(body)
+        count_repos(data, type, 0)
+      _ ->
+        0
+    end
 
   end
 
-  defp count_repos([h|t], type, count) do
+  def count_repos([h|t], type, count) do
     if Map.fetch!(h, "type") == type do
       count_repos(t, type, count + 1)
     end
   end
 
-  defp count_repos([], type, count) do
+  def count_repos([], type, count) do
     count
   end
 end
