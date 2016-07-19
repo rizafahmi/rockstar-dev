@@ -3,6 +3,7 @@ defmodule RockstarDev.GitHub do
   require IEx
   
   alias RockstarDev.GitHubAccount
+  alias RockstarDev.GithubEvent
   import Ecto.Query
 
   def zen do
@@ -79,6 +80,7 @@ defmodule RockstarDev.GitHub do
 
   defp get_user_repo_data([h|t]) do
     IEx.pry
+    # changeset = GithubEvent.changeset(%GithubEvent{}, %{account_id: to_string(Map.fetch!(h, "id")), username: username, html_url: Map.fetch!(h, "html_url"), score: Map.fetch!(h, "score"), no_repo: 0})
   end
 
   defp get_user_repo_data([]) do

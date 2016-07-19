@@ -11,6 +11,7 @@ defmodule RockstarDev.GitHubAccount do
     field :no_repo, :integer
     field :repo_created, :integer
     field :repo_pushed, :integer
+    has_many :github_events, RockstarDev.GithubEvent
 
     timestamps()
   end
