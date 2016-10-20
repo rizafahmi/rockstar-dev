@@ -8,11 +8,11 @@ defmodule RockstarDev.Repo.Migrations.CreateGithubEvent do
       add :created_at, :datetime
       add :language, :string
       add :repo_name, :string
-      add :username, references(:github_accounts, on_delete: :nothing)
+      add :github_account, references(:github_accounts, on_delete: :nothing)
 
       timestamps()
     end
-    create index(:github_events, [:username])
+    create index(:github_events, [:github_account])
 
   end
 end
