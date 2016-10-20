@@ -19,7 +19,7 @@
       <td><%= git_hub_account.account_id %></td>
       <td><%= git_hub_account.username %></td>
       <td><%= git_hub_account.email %></td>
-      <td><%= git_hub_account.html_url %></td>
+      <td><a href="<%= git_hub_account.html_url %>"><%= git_hub_account.html_url %></a></td>
       <td><%= git_hub_account.score %></td>
       <td><%= git_hub_account.no_repo %></td>
 
