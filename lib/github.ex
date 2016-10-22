@@ -20,8 +20,9 @@ defmodule RockstarDev.GitHub do
     IO.inspect Poison.decode(response.body)
   end
 
-  def list_devs(per_page) do
-    url = "https://api.github.com/search/users?q=language:javascript+location:indonesia&per_page=" <> to_string(per_page)
+  def list_devs(page) do
+    url = "https://api.github.com/search/users?q=language:javascript+location:indonesia&per_page=100&page=" <> to_string(page)
+    IO.inspect url
     response = HTTPoison.get(url, get_headers)
     
     case response do

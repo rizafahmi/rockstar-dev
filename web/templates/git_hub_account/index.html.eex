@@ -9,6 +9,7 @@
       <th>Html url</th>
       <th>Score</th>
       <th>No repo</th>
+      <th>Checked</th>
 
       <th></th>
     </tr>
@@ -22,6 +23,7 @@
       <td><a href="<%= git_hub_account.html_url %>"><%= git_hub_account.html_url %></a></td>
       <td><%= git_hub_account.score %></td>
       <td><%= git_hub_account.no_repo %></td>
+      <td><%= git_hub_account.checked %></td>
 
       <td class="text-right">
         <%= link "Show", to: git_hub_account_path(@conn, :show, git_hub_account), class: "btn btn-default btn-xs" %>

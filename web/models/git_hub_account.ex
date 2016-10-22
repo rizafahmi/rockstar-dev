@@ -11,6 +11,7 @@ defmodule RockstarDev.GitHubAccount do
     field :no_repo, :integer
     field :repo_created, :integer
     field :repo_pushed, :integer
+    field :checked, :boolean
     has_many :github_events, RockstarDev.GithubEvent
 
     timestamps()
@@ -21,7 +22,7 @@ defmodule RockstarDev.GitHubAccount do
   """
   def changeset(struct, params \\ %{}) do
     struct
-    |> cast(params, [:account_id, :username, :html_url, :score])
+    |> cast(params, [:account_id, :username, :html_url, :score, :checked])
     |> validate_required([:account_id, :username, :html_url, :score])
     |> put_email()
     # |> put_repos()
@@ -31,6 +32,9 @@ defmodule RockstarDev.GitHubAccount do
     case changeset do
       %Ecto.Changeset{valid?: true, changes: %{username: username}} ->
         put_change(changeset, :email, get_email(username))
+      _ ->
+        put_change(changeset, :email, "no email found, yet")
+        IEx.pry
     end
   end
 
@@ -42,7 +46,7 @@ defmodule RockstarDev.GitHubAccount do
         data = JSON.decode!(body)
         get_email_from_repo(data)
       _ ->
-        "no email found"
+        "no email found, yet"
     end
   end
 
@@ -50,6 +54,7 @@ defmodule RockstarDev.GitHubAccount do
     if Map.fetch!(h, "type") != "PushEvent" do
       get_email_from_repo(t)
     else
+      IEx.pry
       Map.fetch!(h, "payload") |> Map.fetch!("commits") |> Enum.at(0) |> Map.fetch!("author") |> Map.fetch!("email")
     end
   end

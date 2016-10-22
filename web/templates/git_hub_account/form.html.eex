@@ -42,6 +42,12 @@
   </div>
 
   <div class="form-group">
+    <%= label f, :checked, class: "control-label" %>
+    <%= checkbox f, :checked, class: "form-control" %>
+    <%= error_tag f, :no_repo %>
+  </div>
+
+  <div class="form-group">
     <%= submit "Submit", class: "btn btn-primary" %>
   </div>
 <% end %>
