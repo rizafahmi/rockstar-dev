@@ -1,5 +1,8 @@
 defmodule RockstarDev.GitHubAccount do
   require IEx
+  alias RockstarDev.GitHubAccount
+  alias RockstarDev.Repo
+
   use RockstarDev.Web, :model
 
   schema "github_accounts" do
@@ -38,7 +41,7 @@ defmodule RockstarDev.GitHubAccount do
   end
 
   defp get_email(username) do
-    url = "https://api.github.com/users/" <> username <> "/events/public?per_page=50" <> github_login
+    url = "https://api.github.com/users/" <> username <> "/events/public?per_page=50" <> credentials
 
     case HTTPoison.get(url) do
       {:ok, %HTTPoison.Response{status_code: 200, body: body}} ->
@@ -82,8 +85,8 @@ defmodule RockstarDev.GitHubAccount do
 
   end
 
-  def count_repos(username, type) do
-    url = "https://api.github.com/users/" <> username <> "/events/public?per_page=50" <> github_login
+  def count_all_repos(username, page, type) do
+    url = "https://api.github.com/users/" <> username <> "/events/public?per_page=100&page=#{page}" <> credentials
 
     case HTTPoison.get(url) do
       {:ok, %HTTPoison.Response{status_code: 200, body: body}} ->
@@ -96,16 +99,26 @@ defmodule RockstarDev.GitHubAccount do
   end
 
   def count_repos([h|t], type, count) do
+    IO.inspect(Enum.count(t))
     if Map.fetch!(h, "type") == type do
       count_repos(t, type, count + 1)
     end
   end
 
   def count_repos([], type, count) do
+    IO.inspect("Finish counting...")
     count
   end
 
-  defp github_login do
+  defp credentials do
     "&client_id=" <> System.get_env("GITHUB_ID") <> "&client_secret=" <> System.get_env("GITHUB_SECRET")
+  end
+
+
+  def update_and_get_repos do
+    query = from g in "github_accounts",
+      where: g.email == "no email found",
+      select: {g.id, g.email, g.username}
+    Repo.all(query)
   end
 end
