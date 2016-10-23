@@ -38,7 +38,7 @@ defmodule RockstarDev.GitHubAccount do
   end
 
   defp get_email(username) do
-    url = "https://api.github.com/users/" <> username <> "/events/public?per_page=50" <> github_login
+    url = "https://api.github.com/users/" <> username <> "/events/public?per_page=50" <> credentials
 
     case HTTPoison.get(url) do
       {:ok, %HTTPoison.Response{status_code: 200, body: body}} ->
@@ -83,7 +83,7 @@ defmodule RockstarDev.GitHubAccount do
   end
 
   def count_repos(username, type) do
-    url = "https://api.github.com/users/" <> username <> "/events/public?per_page=50" <> github_login
+    url = "https://api.github.com/users/" <> username <> "/events/public?per_page=50" <> credentials
 
     case HTTPoison.get(url) do
       {:ok, %HTTPoison.Response{status_code: 200, body: body}} ->
@@ -105,7 +105,8 @@ defmodule RockstarDev.GitHubAccount do
     count
   end
 
-  defp github_login do
+  defp credentials do
     "&client_id=" <> System.get_env("GITHUB_ID") <> "&client_secret=" <> System.get_env("GITHUB_SECRET")
   end
+
 end
