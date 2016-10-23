@@ -1,5 +1,7 @@
 # RockstarDev
 
+Mining data from GitHub. It's very experimental.
+
 To start your Phoenix app:
 
   * Install dependencies with `mix deps.get`

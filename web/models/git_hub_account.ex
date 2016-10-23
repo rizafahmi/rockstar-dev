@@ -34,12 +34,11 @@ defmodule RockstarDev.GitHubAccount do
         put_change(changeset, :email, get_email(username))
       _ ->
         put_change(changeset, :email, "no email found, yet")
-        IEx.pry
     end
   end
 
   defp get_email(username) do
-    url = "https://api.github.com/users/" <> username <> "/events/public?per_page=50"
+    url = "https://api.github.com/users/" <> username <> "/events/public?per_page=50" <> github_login
 
     case HTTPoison.get(url) do
       {:ok, %HTTPoison.Response{status_code: 200, body: body}} ->
@@ -54,7 +53,6 @@ defmodule RockstarDev.GitHubAccount do
     if Map.fetch!(h, "type") != "PushEvent" do
       get_email_from_repo(t)
     else
-      IEx.pry
       Map.fetch!(h, "payload") |> Map.fetch!("commits") |> Enum.at(0) |> Map.fetch!("author") |> Map.fetch!("email")
     end
   end
@@ -85,7 +83,7 @@ defmodule RockstarDev.GitHubAccount do
   end
 
   def count_repos(username, type) do
-    url = "https://api.github.com/users/" <> username <> "/events/public?per_page=50"
+    url = "https://api.github.com/users/" <> username <> "/events/public?per_page=50" <> github_login
 
     case HTTPoison.get(url) do
       {:ok, %HTTPoison.Response{status_code: 200, body: body}} ->
@@ -105,5 +103,9 @@ defmodule RockstarDev.GitHubAccount do
 
   def count_repos([], type, count) do
     count
+  end
+
+  defp github_login do
+    "&client_id=" <> System.get_env("GITHUB_ID") <> "&client_secret=" <> System.get_env("GITHUB_SECRET")
   end
 end

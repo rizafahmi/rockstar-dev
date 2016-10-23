@@ -27,9 +27,9 @@ config :rockstar_dev, GitHub,
   client_secret: System.get_env("GITHUB_SECRET"),
   token: System.get_env("GITHUB_TOKEN")
 
-config :quantum, cron: [
-  "* * * * *": {RockstarDev.GitHub, :cron}
-]
+# config :quantum, cron: [
+#   "* * * * *": {RockstarDev.GitHub, :cron}
+# ]
 
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.

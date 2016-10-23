@@ -17,12 +17,10 @@ defmodule RockstarDev.GitHub do
   def list_repos do
     url = "https://api.github.com/user/repos"
     response = HTTPoison.get!(url, get_headers)
-    IO.inspect Poison.decode(response.body)
   end
 
   def list_devs(page) do
     url = "https://api.github.com/search/users?q=language:javascript+location:indonesia&per_page=100&page=" <> to_string(page)
-    IO.inspect url
     response = HTTPoison.get(url, get_headers)
     
     case response do
@@ -34,6 +32,10 @@ defmodule RockstarDev.GitHub do
       _ ->
         "Error getting github data"
     end
+  end
+
+  def update_list_devs do
+    
   end
 
   def cron do
